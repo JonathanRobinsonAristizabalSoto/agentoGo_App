@@ -11,6 +11,10 @@ use OpenApi\Attributes as OA;
 
 class ClientController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(\App\Models\Client::class, 'client');
+    }
     #[OA\Get(path: '/businesses/{business_id}/clients', tags: ['Client'], summary: 'Listar clientes del negocio', security: [['sanctum' => []]], responses: [new OA\Response(response: 200, description: 'Lista de clientes con paginación'), new OA\Response(response: 403, description: 'No autorizado', content: new OA\JsonContent(ref: '#/components/schemas/Error403'))])]
     public function index(ClientIndexRequest $request, Business $business)
     {

@@ -20,6 +20,24 @@ class BusinessPolicy
     }
 
     /**
+     * Determina si el usuario puede listar negocios (viewAny).
+     * Permitido para usuarios autenticados.
+     */
+    public function viewAny(User $user): bool
+    {
+        return (bool) $user;
+    }
+
+    /**
+     * Determina si el usuario puede crear un negocio.
+     * Permitido para usuarios autenticados.
+     */
+    public function create(User $user): bool
+    {
+        return (bool) $user;
+    }
+
+    /**
      * Determina si el usuario puede actualizar el negocio.
      * Permitido: owner, editor
      */

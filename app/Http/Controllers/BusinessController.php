@@ -15,6 +15,10 @@ use OpenApi\Attributes as OA;
  */
 class BusinessController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(\App\Models\Business::class, 'business');
+    }
     #[OA\Get(
         path: '/businesses',
         tags: ['Business'],

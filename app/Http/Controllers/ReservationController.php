@@ -11,6 +11,10 @@ use OpenApi\Attributes as OA;
 
 class ReservationController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(\App\Models\Reservation::class, 'reservation');
+    }
     #[OA\Get(path: '/businesses/{business_id}/reservations', tags: ['Reservation'], summary: 'Listar reservas del negocio', security: [['sanctum' => []]], responses: [new OA\Response(response: 200, description: 'Lista de reservas con paginación'), new OA\Response(response: 403, description: 'No autorizado', content: new OA\JsonContent(ref: '#/components/schemas/Error403'))])]
     public function index(ReservationIndexRequest $request, Business $business)
     {

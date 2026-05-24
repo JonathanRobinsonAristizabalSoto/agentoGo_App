@@ -12,6 +12,10 @@ use OpenApi\Attributes as OA;
 
 class EmployeeController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(\App\Models\Employee::class, 'employee');
+    }
     #[OA\Get(path: '/businesses/{business_id}/employees', tags: ['Employee'], summary: 'Listar empleados del negocio', security: [['sanctum' => []]], responses: [new OA\Response(response: 200, description: 'Lista de empleados con paginación'), new OA\Response(response: 403, description: 'No autorizado', content: new OA\JsonContent(ref: '#/components/schemas/Error403'))])]
     public function index(EmployeeIndexRequest $request, Business $business)
     {

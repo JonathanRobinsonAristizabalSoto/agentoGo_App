@@ -8,8 +8,12 @@ use App\Models\User;
 
 class ClientPolicy
 {
-    public function viewAny(User $user, Business $business): bool
+    public function viewAny(User $user, ?Business $business = null): bool
     {
+        if (! $business) {
+            return (bool) $user;
+        }
+
         return $user->businesses()->where('business_id', $business->id)->whereIn('role', ['owner', 'editor', 'viewer'])->exists();
     }
 
@@ -18,8 +22,12 @@ class ClientPolicy
         return $user->businesses()->where('business_id', $client->business_id)->whereIn('role', ['owner', 'editor', 'viewer'])->exists();
     }
 
-    public function create(User $user, Business $business): bool
+    public function create(User $user, ?Business $business = null): bool
     {
+        if (! $business) {
+            return (bool) $user;
+        }
+
         return $user->businesses()->where('business_id', $business->id)->whereIn('role', ['owner', 'editor'])->exists();
     }
 

@@ -8,8 +8,12 @@ use App\Models\User;
 
 class EmployeePolicy
 {
-    public function viewAny(User $user, Business $business): bool
+    public function viewAny(User $user, ?Business $business = null): bool
     {
+        if (! $business) {
+            return (bool) $user;
+        }
+
         return $user->businesses()->where('business_id', $business->id)->whereIn('role', ['owner', 'editor', 'viewer'])->exists();
     }
 
@@ -18,8 +22,12 @@ class EmployeePolicy
         return $user->businesses()->where('business_id', $employee->business_id)->whereIn('role', ['owner', 'editor', 'viewer'])->exists();
     }
 
-    public function create(User $user, Business $business): bool
+    public function create(User $user, ?Business $business = null): bool
     {
+        if (! $business) {
+            return (bool) $user;
+        }
+
         return $user->businesses()->where('business_id', $business->id)->whereIn('role', ['owner', 'editor'])->exists();
     }
 
