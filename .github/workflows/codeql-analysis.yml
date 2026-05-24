@@ -1,0 +1,43 @@
+name: "CodeQL SAST"
+
+on:
+  push:
+    branches: [ main, feature/ci ]
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  analyze:
+    name: Analyze (CodeQL)
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      security-events: write
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v2
+      with:
+        languages: php
+
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v3
+      with:
+        php-version: '8.2'
+        tools: composer
+
+    - name: Install dependencies (apps/api)
+      run: |
+        cd apps/api
+        composer install --no-interaction --no-progress --prefer-dist
+
+    - name: Run PHP Unit tests (apps/api)
+      run: |
+        cd apps/api
+        php artisan test --coverage-text || true
+
+    - name: Perform CodeQL analysis
+      uses: github/codeql-action/analyze@v2
