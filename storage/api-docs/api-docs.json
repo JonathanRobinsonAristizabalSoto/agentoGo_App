@@ -1,0 +1,744 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "AgentoGo API",
+        "description": "API REST multi-tenant con autenticación, auditoría y gestión de negocios",
+        "contact": {
+            "name": "AgentoGo Support",
+            "email": "support@agentogo.com"
+        },
+        "version": "0.3.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000/api",
+            "description": "Servidor de desarrollo"
+        }
+    ],
+    "paths": {
+        "/audit-logs": {
+            "get": {
+                "tags": [
+                    "AuditLog"
+                ],
+                "summary": "Listar registros de auditoría",
+                "operationId": "26a564983f3075fc795357c172b819f1",
+                "responses": {
+                    "200": {
+                        "description": "Lista de registros de auditoría con paginación"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/auth/register": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Registrar nuevo usuario",
+                "operationId": "ed42f392010c301892e640067141676e",
+                "responses": {
+                    "201": {
+                        "description": "Usuario registrado exitosamente"
+                    }
+                }
+            }
+        },
+        "/auth/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Iniciar sesión",
+                "operationId": "8cb7742ae98d0990acb2907c4e00bf24",
+                "responses": {
+                    "200": {
+                        "description": "Login exitoso"
+                    }
+                }
+            }
+        },
+        "/auth/me": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Obtener perfil del usuario autenticado",
+                "operationId": "a9c495788506b114956e3f509e5d90a2",
+                "responses": {
+                    "200": {
+                        "description": "Perfil del usuario"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/auth/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Cerrar sesión",
+                "operationId": "0d29c740dc06d77602af8095bf4654cc",
+                "responses": {
+                    "204": {
+                        "description": "Sesión cerrada"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/businesses": {
+            "get": {
+                "tags": [
+                    "Business"
+                ],
+                "summary": "Listar negocios del usuario",
+                "operationId": "1706cbaf428057f56998d8e961c6862c",
+                "responses": {
+                    "200": {
+                        "description": "Lista de negocios con paginación"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Business"
+                ],
+                "summary": "Crear un nuevo negocio",
+                "operationId": "9a2f8ce933dcf23050126381b3f8c21a",
+                "responses": {
+                    "201": {
+                        "description": "Negocio creado exitosamente"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/businesses/{business_id}": {
+            "get": {
+                "tags": [
+                    "Business"
+                ],
+                "summary": "Obtener detalles de un negocio",
+                "operationId": "c4818a6e6952d5e73e47243dd81a95b6",
+                "responses": {
+                    "200": {
+                        "description": "Detalles del negocio"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Business"
+                ],
+                "summary": "Actualizar un negocio",
+                "operationId": "a972040fead5e0bac36fbac3e26dd5fe",
+                "responses": {
+                    "200": {
+                        "description": "Negocio actualizado"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Business"
+                ],
+                "summary": "Eliminar un negocio",
+                "operationId": "ece5bc88037ea0e5ccc6583aa0ce281e",
+                "responses": {
+                    "204": {
+                        "description": "Negocio eliminado"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/businesses/{business_id}/clients": {
+            "get": {
+                "tags": [
+                    "Client"
+                ],
+                "summary": "Listar clientes del negocio",
+                "operationId": "567ea98be06efeac8427f98f2be17acb",
+                "responses": {
+                    "200": {
+                        "description": "Lista de clientes con paginación"
+                    },
+                    "403": {
+                        "description": "No autorizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error403"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Client"
+                ],
+                "summary": "Crear un cliente",
+                "operationId": "d7ee991434d8ac73abd9844d6016d34c",
+                "responses": {
+                    "201": {
+                        "description": "Cliente creado"
+                    },
+                    "403": {
+                        "description": "No autorizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error403"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validación fallida",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/businesses/{business_id}/clients/{client_id}": {
+            "get": {
+                "tags": [
+                    "Client"
+                ],
+                "summary": "Obtener un cliente",
+                "operationId": "cee977ae365a631dc4e17a83e617e634",
+                "responses": {
+                    "200": {
+                        "description": "Detalle del cliente"
+                    },
+                    "403": {
+                        "description": "No autorizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error403"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Client"
+                ],
+                "summary": "Actualizar un cliente",
+                "operationId": "bf4f775e93f353219533d0c25db7f40d",
+                "responses": {
+                    "200": {
+                        "description": "Cliente actualizado"
+                    },
+                    "403": {
+                        "description": "No autorizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error403"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validación fallida",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Client"
+                ],
+                "summary": "Eliminar un cliente",
+                "operationId": "c544822adcae773b1ef73d2cbf497258",
+                "responses": {
+                    "204": {
+                        "description": "Cliente eliminado"
+                    },
+                    "403": {
+                        "description": "No autorizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error403"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/businesses/{business_id}/employees": {
+            "get": {
+                "tags": [
+                    "Employee"
+                ],
+                "summary": "Listar empleados del negocio",
+                "operationId": "bd6fa756b336e9467fab75d7ea7182e3",
+                "responses": {
+                    "200": {
+                        "description": "Lista de empleados con paginación"
+                    },
+                    "403": {
+                        "description": "No autorizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error403"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Employee"
+                ],
+                "summary": "Crear un empleado",
+                "operationId": "55d00ff4444accb947d9329316bccda5",
+                "responses": {
+                    "201": {
+                        "description": "Empleado creado"
+                    },
+                    "403": {
+                        "description": "No autorizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error403"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validación fallida",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/businesses/{business_id}/employees/{employee_id}": {
+            "get": {
+                "tags": [
+                    "Employee"
+                ],
+                "summary": "Obtener un empleado",
+                "operationId": "95dc1d3e7a36b8b99317cda2b0021c07",
+                "responses": {
+                    "200": {
+                        "description": "Detalle del empleado"
+                    },
+                    "403": {
+                        "description": "No autorizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error403"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Employee"
+                ],
+                "summary": "Actualizar un empleado",
+                "operationId": "a39acddc014ee232fa268a1f9e269bf0",
+                "responses": {
+                    "200": {
+                        "description": "Empleado actualizado"
+                    },
+                    "403": {
+                        "description": "No autorizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error403"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validación fallida",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Employee"
+                ],
+                "summary": "Eliminar un empleado",
+                "operationId": "63bceeb1b13d316d4dea53dcd95f9ca6",
+                "responses": {
+                    "204": {
+                        "description": "Empleado eliminado"
+                    },
+                    "403": {
+                        "description": "No autorizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error403"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/businesses/{business_id}/reservations": {
+            "get": {
+                "tags": [
+                    "Reservation"
+                ],
+                "summary": "Listar reservas del negocio",
+                "operationId": "4494a89f4d98d7afd4f97faa52755ab1",
+                "responses": {
+                    "200": {
+                        "description": "Lista de reservas con paginación"
+                    },
+                    "403": {
+                        "description": "No autorizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error403"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Reservation"
+                ],
+                "summary": "Crear una reserva",
+                "operationId": "99e31d4328db123c2355bba0a2748239",
+                "responses": {
+                    "201": {
+                        "description": "Reserva creada"
+                    },
+                    "403": {
+                        "description": "No autorizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error403"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validación fallida",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/businesses/{business_id}/reservations/{reservation_id}": {
+            "get": {
+                "tags": [
+                    "Reservation"
+                ],
+                "summary": "Obtener una reserva",
+                "operationId": "94b9c9d1e94a56ab828cc3e31aa95afa",
+                "responses": {
+                    "200": {
+                        "description": "Detalle de la reserva"
+                    },
+                    "403": {
+                        "description": "No autorizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error403"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Reservation"
+                ],
+                "summary": "Actualizar una reserva",
+                "operationId": "daaedac3cb021277edc496b231cbee44",
+                "responses": {
+                    "200": {
+                        "description": "Reserva actualizada"
+                    },
+                    "403": {
+                        "description": "No autorizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error403"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validación fallida",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Reservation"
+                ],
+                "summary": "Eliminar una reserva",
+                "operationId": "a1b8beebf99146188b960f93cde6358d",
+                "responses": {
+                    "204": {
+                        "description": "Reserva eliminada"
+                    },
+                    "403": {
+                        "description": "No autorizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error403"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Error403": {
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "example": 403
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "No autorizado"
+                    }
+                },
+                "type": "object"
+            },
+            "ValidationError": {
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "The given data was invalid."
+                    },
+                    "errors": {
+                        "description": "Mapa de errores por campo",
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "sanctum": {
+                "type": "http",
+                "description": "Token de autenticación Sanctum",
+                "bearerFormat": "token",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "AuditLog",
+            "description": "AuditLog"
+        },
+        {
+            "name": "Auth",
+            "description": "Auth"
+        },
+        {
+            "name": "Business",
+            "description": "Business"
+        },
+        {
+            "name": "Client",
+            "description": "Client"
+        },
+        {
+            "name": "Employee",
+            "description": "Employee"
+        },
+        {
+            "name": "Reservation",
+            "description": "Reservation"
+        }
+    ]
+}
