@@ -690,7 +690,11 @@
                         "example": "No autorizado"
                     }
                 },
-                "type": "object"
+                "type": "object",
+                "example": {
+                    "code": 403,
+                    "message": "No tiene permisos para realizar esta acción."
+                }
             },
             "ValidationError": {
                 "properties": {
@@ -703,7 +707,18 @@
                         "type": "object"
                     }
                 },
-                "type": "object"
+                "type": "object",
+                "example": {
+                    "message": "The given data was invalid.",
+                    "errors": {
+                        "name": [
+                            "El campo nombre es requerido."
+                        ],
+                        "email": [
+                            "El email debe ser una dirección válida."
+                        ]
+                    }
+                }
             }
         },
         "securitySchemes": {

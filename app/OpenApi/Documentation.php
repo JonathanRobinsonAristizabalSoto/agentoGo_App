@@ -30,6 +30,7 @@ use OpenApi\Attributes as OA;
 				new OA\Property(property: 'code', type: 'integer', example: 403),
 				new OA\Property(property: 'message', type: 'string', example: 'No autorizado')
 			]
+			, example: ['code' => 403, 'message' => 'No tiene permisos para realizar esta acción.']
 		),
 		new OA\Schema(
 			schema: 'ValidationError',
@@ -38,6 +39,7 @@ use OpenApi\Attributes as OA;
 				new OA\Property(property: 'message', type: 'string', example: 'The given data was invalid.'),
 				new OA\Property(property: 'errors', type: 'object', description: 'Mapa de errores por campo')
 			]
+			, example: ['message' => 'The given data was invalid.', 'errors' => ['name' => ['El campo nombre es requerido.'], 'email' => ['El email debe ser una dirección válida.']]]
 		)
 	]
 )]

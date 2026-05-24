@@ -52,5 +52,10 @@ class AppServiceProvider extends ServiceProvider
             $key = $request->header('X-Business-Id') ?: ($request->user()?->id ?: $request->ip());
             return Limit::perMinute(60)->by($key);
         });
+
+        // Registrar middleware de cabeceras de seguridad en el grupo 'api'
+        if ($this->app->has('router')) {
+            $this->app['router']->pushMiddlewareToGroup('api', \App\Http\Middleware\SecurityHeaders::class);
+        }
     }
 }
