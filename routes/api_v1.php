@@ -10,21 +10,20 @@ use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\ReservationController;
 
+// This file duplicates the main API routes under the /v1 prefix.
+
 // Rutas de autenticación públicas
 Route::post('/auth/register', [AuthController::class, 'register'])->middleware('throttle:login');
 Route::post('/auth/login', [AuthController::class, 'login'])->middleware('throttle:login');
 
 // Rutas protegidas con autenticación Sanctum
 Route::middleware('auth:sanctum')->group(function () {
-    // Rutas de autenticación autenticadas
     Route::post('/auth/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
 
-    // Crear y listar negocios (no requieren tenant existente)
     Route::post('/businesses', [BusinessController::class, 'store']);
     Route::get('/businesses', [BusinessController::class, 'index']);
 
-    // Rutas que requieren un business existente (tenant)
     Route::middleware([\App\Http\Middleware\EnsureTenant::class, 'throttle:business'])->group(function () {
         Route::get('/businesses/{business}', [BusinessController::class, 'show']);
         Route::put('/businesses/{business}', [BusinessController::class, 'update']);
@@ -55,16 +54,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/businesses/{business}/reservations/{reservation}', [ReservationController::class, 'destroy']);
     });
 
-    // Rutas de auditoría
     Route::get('/audit-logs', [AuditLogController::class, 'index']);
 
-    // Ruta que retorna el usuario autenticado
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
 });
-
-    // Registrar rutas versionadas (v1) para soportar versionado de API sin romper rutas actuales
-    Route::prefix('v1')->group(function () {
-        require __DIR__ . '/api_v1.php';
-    });
