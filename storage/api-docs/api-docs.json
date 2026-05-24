@@ -128,6 +128,24 @@
                 "responses": {
                     "201": {
                         "description": "Negocio creado exitosamente"
+                    },
+                    "422": {
+                        "description": "Validación fallida",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationError"
+                                },
+                                "example": {
+                                    "message": "The given data was invalid.",
+                                    "errors": {
+                                        "name": [
+                                            "El nombre del negocio es obligatorio."
+                                        ]
+                                    }
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -147,6 +165,20 @@
                 "responses": {
                     "200": {
                         "description": "Detalles del negocio"
+                    },
+                    "403": {
+                        "description": "Acceso denegado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error403"
+                                },
+                                "example": {
+                                    "code": 403,
+                                    "message": "No tiene permisos para realizar esta acción."
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -164,6 +196,38 @@
                 "responses": {
                     "200": {
                         "description": "Negocio actualizado"
+                    },
+                    "422": {
+                        "description": "Validación fallida",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationError"
+                                },
+                                "example": {
+                                    "message": "The given data was invalid.",
+                                    "errors": {
+                                        "name": [
+                                            "El nombre del negocio es obligatorio."
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Acceso denegado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error403"
+                                },
+                                "example": {
+                                    "code": 403,
+                                    "message": "No tiene permisos para realizar esta acción."
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -181,6 +245,20 @@
                 "responses": {
                     "204": {
                         "description": "Negocio eliminado"
+                    },
+                    "403": {
+                        "description": "Acceso denegado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error403"
+                                },
+                                "example": {
+                                    "code": 403,
+                                    "message": "No tiene permisos para realizar esta acción."
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -207,6 +285,10 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Error403"
+                                },
+                                "example": {
+                                    "code": 403,
+                                    "message": "No tiene permisos para realizar esta acción."
                                 }
                             }
                         }
@@ -234,6 +316,10 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Error403"
+                                },
+                                "example": {
+                                    "code": 403,
+                                    "message": "No tiene permisos para realizar esta acción."
                                 }
                             }
                         }
@@ -244,6 +330,17 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ValidationError"
+                                },
+                                "example": {
+                                    "message": "The given data was invalid.",
+                                    "errors": {
+                                        "name": [
+                                            "El nombre es obligatorio."
+                                        ],
+                                        "email": [
+                                            "El email debe ser una dirección válida."
+                                        ]
+                                    }
                                 }
                             }
                         }
@@ -273,6 +370,10 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Error403"
+                                },
+                                "example": {
+                                    "code": 403,
+                                    "message": "No tiene permisos para realizar esta acción."
                                 }
                             }
                         }
@@ -303,6 +404,10 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Error403"
+                                },
+                                "example": {
+                                    "code": 403,
+                                    "message": "No tiene permisos para realizar esta acción."
                                 }
                             }
                         }
@@ -313,6 +418,17 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ValidationError"
+                                },
+                                "example": {
+                                    "message": "The given data was invalid.",
+                                    "errors": {
+                                        "name": [
+                                            "El nombre es obligatorio."
+                                        ],
+                                        "email": [
+                                            "El email debe ser una dirección válida."
+                                        ]
+                                    }
                                 }
                             }
                         }
@@ -340,6 +456,10 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Error403"
+                                },
+                                "example": {
+                                    "code": 403,
+                                    "message": "No tiene permisos para realizar esta acción."
                                 }
                             }
                         }
@@ -369,6 +489,10 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Error403"
+                                },
+                                "example": {
+                                    "code": 403,
+                                    "message": "No tiene permisos para realizar esta acción."
                                 }
                             }
                         }
@@ -396,6 +520,10 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Error403"
+                                },
+                                "example": {
+                                    "code": 403,
+                                    "message": "No tiene permisos para realizar esta acción."
                                 }
                             }
                         }
@@ -406,6 +534,17 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ValidationError"
+                                },
+                                "example": {
+                                    "message": "The given data was invalid.",
+                                    "errors": {
+                                        "name": [
+                                            "El nombre es obligatorio."
+                                        ],
+                                        "email": [
+                                            "El email debe ser una dirección válida."
+                                        ]
+                                    }
                                 }
                             }
                         }
@@ -435,6 +574,10 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Error403"
+                                },
+                                "example": {
+                                    "code": 403,
+                                    "message": "No tiene permisos para realizar esta acción."
                                 }
                             }
                         }
@@ -465,6 +608,10 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Error403"
+                                },
+                                "example": {
+                                    "code": 403,
+                                    "message": "No tiene permisos para realizar esta acción."
                                 }
                             }
                         }
@@ -475,6 +622,17 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ValidationError"
+                                },
+                                "example": {
+                                    "message": "The given data was invalid.",
+                                    "errors": {
+                                        "name": [
+                                            "El nombre es obligatorio."
+                                        ],
+                                        "email": [
+                                            "El email debe ser una dirección válida."
+                                        ]
+                                    }
                                 }
                             }
                         }
@@ -502,6 +660,10 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Error403"
+                                },
+                                "example": {
+                                    "code": 403,
+                                    "message": "No tiene permisos para realizar esta acción."
                                 }
                             }
                         }
@@ -531,6 +693,10 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Error403"
+                                },
+                                "example": {
+                                    "code": 403,
+                                    "message": "No tiene permisos para realizar esta acción."
                                 }
                             }
                         }
@@ -558,6 +724,10 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Error403"
+                                },
+                                "example": {
+                                    "code": 403,
+                                    "message": "No tiene permisos para realizar esta acción."
                                 }
                             }
                         }
@@ -568,6 +738,17 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ValidationError"
+                                },
+                                "example": {
+                                    "message": "The given data was invalid.",
+                                    "errors": {
+                                        "start_time": [
+                                            "La fecha/hora de inicio es requerida."
+                                        ],
+                                        "employee_id": [
+                                            "Empleado no encontrado o no disponible."
+                                        ]
+                                    }
                                 }
                             }
                         }
@@ -597,6 +778,10 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Error403"
+                                },
+                                "example": {
+                                    "code": 403,
+                                    "message": "No tiene permisos para realizar esta acción."
                                 }
                             }
                         }
@@ -627,6 +812,10 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Error403"
+                                },
+                                "example": {
+                                    "code": 403,
+                                    "message": "No tiene permisos para realizar esta acción."
                                 }
                             }
                         }
@@ -637,6 +826,17 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ValidationError"
+                                },
+                                "example": {
+                                    "message": "The given data was invalid.",
+                                    "errors": {
+                                        "start_time": [
+                                            "La fecha/hora de inicio es requerida."
+                                        ],
+                                        "employee_id": [
+                                            "Empleado no encontrado o no disponible."
+                                        ]
+                                    }
                                 }
                             }
                         }
@@ -664,6 +864,10 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Error403"
+                                },
+                                "example": {
+                                    "code": 403,
+                                    "message": "No tiene permisos para realizar esta acción."
                                 }
                             }
                         }

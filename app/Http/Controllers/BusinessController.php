@@ -90,7 +90,7 @@ class BusinessController extends Controller
         tags: ['Business'],
         summary: 'Crear un nuevo negocio',
         security: [['sanctum' => []]],
-        responses: [new OA\Response(response: 201, description: 'Negocio creado exitosamente')]
+        responses: [new OA\Response(response: 201, description: 'Negocio creado exitosamente'), new OA\Response(response: 422, description: 'Validación fallida', content: new OA\JsonContent(ref: '#/components/schemas/ValidationError', example: ['message' => 'The given data was invalid.', 'errors' => ['name' => ['El nombre del negocio es obligatorio.']]]))]
     )]
     /**
      * @OA\Post(
@@ -159,7 +159,7 @@ class BusinessController extends Controller
         tags: ['Business'],
         summary: 'Obtener detalles de un negocio',
         security: [['sanctum' => []]],
-        responses: [new OA\Response(response: 200, description: 'Detalles del negocio')]
+        responses: [new OA\Response(response: 200, description: 'Detalles del negocio'), new OA\Response(response: 403, description: 'Acceso denegado', content: new OA\JsonContent(ref: '#/components/schemas/Error403', example: ['code' => 403, 'message' => 'No tiene permisos para realizar esta acción.']))]
     )]
     /**
      * @OA\Get(
@@ -199,7 +199,7 @@ class BusinessController extends Controller
         tags: ['Business'],
         summary: 'Actualizar un negocio',
         security: [['sanctum' => []]],
-        responses: [new OA\Response(response: 200, description: 'Negocio actualizado')]
+        responses: [new OA\Response(response: 200, description: 'Negocio actualizado'), new OA\Response(response: 422, description: 'Validación fallida', content: new OA\JsonContent(ref: '#/components/schemas/ValidationError', example: ['message' => 'The given data was invalid.', 'errors' => ['name' => ['El nombre del negocio es obligatorio.']]])), new OA\Response(response: 403, description: 'Acceso denegado', content: new OA\JsonContent(ref: '#/components/schemas/Error403', example: ['code' => 403, 'message' => 'No tiene permisos para realizar esta acción.']))]
     )]
     /**
      * @OA\Put(
@@ -258,7 +258,7 @@ class BusinessController extends Controller
         tags: ['Business'],
         summary: 'Eliminar un negocio',
         security: [['sanctum' => []]],
-        responses: [new OA\Response(response: 204, description: 'Negocio eliminado')]
+        responses: [new OA\Response(response: 204, description: 'Negocio eliminado'), new OA\Response(response: 403, description: 'Acceso denegado', content: new OA\JsonContent(ref: '#/components/schemas/Error403', example: ['code' => 403, 'message' => 'No tiene permisos para realizar esta acción.']))]
     )]
     /**
      * @OA\Delete(

@@ -15,7 +15,7 @@ class ReservationController extends Controller
     {
         $this->authorizeResource(\App\Models\Reservation::class, 'reservation');
     }
-    #[OA\Get(path: '/businesses/{business_id}/reservations', tags: ['Reservation'], summary: 'Listar reservas del negocio', security: [['sanctum' => []]], responses: [new OA\Response(response: 200, description: 'Lista de reservas con paginación'), new OA\Response(response: 403, description: 'No autorizado', content: new OA\JsonContent(ref: '#/components/schemas/Error403'))])]
+    #[OA\Get(path: '/businesses/{business_id}/reservations', tags: ['Reservation'], summary: 'Listar reservas del negocio', security: [['sanctum' => []]], responses: [new OA\Response(response: 200, description: 'Lista de reservas con paginación'), new OA\Response(response: 403, description: 'No autorizado', content: new OA\JsonContent(ref: '#/components/schemas/Error403', example: ['code' => 403, 'message' => 'No tiene permisos para realizar esta acción.']))])]
     public function index(ReservationIndexRequest $request, Business $business)
     {
         $this->authorize('viewAny', [Reservation::class, $business]);
@@ -64,7 +64,7 @@ class ReservationController extends Controller
         return response()->json($payload);
     }
 
-    #[OA\Post(path: '/businesses/{business_id}/reservations', tags: ['Reservation'], summary: 'Crear una reserva', security: [['sanctum' => []]], responses: [new OA\Response(response: 201, description: 'Reserva creada'), new OA\Response(response: 403, description: 'No autorizado', content: new OA\JsonContent(ref: '#/components/schemas/Error403')), new OA\Response(response: 422, description: 'Validación fallida', content: new OA\JsonContent(ref: '#/components/schemas/ValidationError'))])]
+    #[OA\Post(path: '/businesses/{business_id}/reservations', tags: ['Reservation'], summary: 'Crear una reserva', security: [['sanctum' => []]], responses: [new OA\Response(response: 201, description: 'Reserva creada'), new OA\Response(response: 403, description: 'No autorizado', content: new OA\JsonContent(ref: '#/components/schemas/Error403', example: ['code' => 403, 'message' => 'No tiene permisos para realizar esta acción.'])), new OA\Response(response: 422, description: 'Validación fallida', content: new OA\JsonContent(ref: '#/components/schemas/ValidationError', example: ['message' => 'The given data was invalid.', 'errors' => ['start_time' => ['La fecha/hora de inicio es requerida.'], 'employee_id' => ['Empleado no encontrado o no disponible.']]]))])]
     public function store(StoreReservationRequest $request, Business $business)
     {
         $this->authorize('create', [Reservation::class, $business]);
@@ -77,7 +77,7 @@ class ReservationController extends Controller
         return response()->json(['data' => $reservation->load(['department', 'employee', 'client', 'creator'])], 201);
     }
 
-    #[OA\Get(path: '/businesses/{business_id}/reservations/{reservation_id}', tags: ['Reservation'], summary: 'Obtener una reserva', security: [['sanctum' => []]], responses: [new OA\Response(response: 200, description: 'Detalle de la reserva'), new OA\Response(response: 403, description: 'No autorizado', content: new OA\JsonContent(ref: '#/components/schemas/Error403')), new OA\Response(response: 404, description: 'No encontrado')])]
+    #[OA\Get(path: '/businesses/{business_id}/reservations/{reservation_id}', tags: ['Reservation'], summary: 'Obtener una reserva', security: [['sanctum' => []]], responses: [new OA\Response(response: 200, description: 'Detalle de la reserva'), new OA\Response(response: 403, description: 'No autorizado', content: new OA\JsonContent(ref: '#/components/schemas/Error403', example: ['code' => 403, 'message' => 'No tiene permisos para realizar esta acción.'])), new OA\Response(response: 404, description: 'No encontrado')])]
     public function show(Business $business, Reservation $reservation)
     {
         $this->ensureReservationBelongsToBusiness($business, $reservation);
@@ -86,7 +86,7 @@ class ReservationController extends Controller
         return response()->json(['data' => $reservation->load(['department', 'employee', 'client', 'creator'])]);
     }
 
-    #[OA\Put(path: '/businesses/{business_id}/reservations/{reservation_id}', tags: ['Reservation'], summary: 'Actualizar una reserva', security: [['sanctum' => []]], responses: [new OA\Response(response: 200, description: 'Reserva actualizada'), new OA\Response(response: 403, description: 'No autorizado', content: new OA\JsonContent(ref: '#/components/schemas/Error403')), new OA\Response(response: 422, description: 'Validación fallida', content: new OA\JsonContent(ref: '#/components/schemas/ValidationError'))])]
+    #[OA\Put(path: '/businesses/{business_id}/reservations/{reservation_id}', tags: ['Reservation'], summary: 'Actualizar una reserva', security: [['sanctum' => []]], responses: [new OA\Response(response: 200, description: 'Reserva actualizada'), new OA\Response(response: 403, description: 'No autorizado', content: new OA\JsonContent(ref: '#/components/schemas/Error403', example: ['code' => 403, 'message' => 'No tiene permisos para realizar esta acción.'])), new OA\Response(response: 422, description: 'Validación fallida', content: new OA\JsonContent(ref: '#/components/schemas/ValidationError', example: ['message' => 'The given data was invalid.', 'errors' => ['start_time' => ['La fecha/hora de inicio es requerida.'], 'employee_id' => ['Empleado no encontrado o no disponible.']]]))])]
     public function update(UpdateReservationRequest $request, Business $business, Reservation $reservation)
     {
         $this->ensureReservationBelongsToBusiness($business, $reservation);
@@ -97,7 +97,7 @@ class ReservationController extends Controller
         return response()->json(['data' => $reservation->fresh()->load(['department', 'employee', 'client', 'creator'])]);
     }
 
-    #[OA\Delete(path: '/businesses/{business_id}/reservations/{reservation_id}', tags: ['Reservation'], summary: 'Eliminar una reserva', security: [['sanctum' => []]], responses: [new OA\Response(response: 204, description: 'Reserva eliminada'), new OA\Response(response: 403, description: 'No autorizado', content: new OA\JsonContent(ref: '#/components/schemas/Error403'))])]
+    #[OA\Delete(path: '/businesses/{business_id}/reservations/{reservation_id}', tags: ['Reservation'], summary: 'Eliminar una reserva', security: [['sanctum' => []]], responses: [new OA\Response(response: 204, description: 'Reserva eliminada'), new OA\Response(response: 403, description: 'No autorizado', content: new OA\JsonContent(ref: '#/components/schemas/Error403', example: ['code' => 403, 'message' => 'No tiene permisos para realizar esta acción.']))])]
     public function destroy(Business $business, Reservation $reservation)
     {
         $this->ensureReservationBelongsToBusiness($business, $reservation);

@@ -16,7 +16,7 @@ class EmployeeController extends Controller
     {
         $this->authorizeResource(\App\Models\Employee::class, 'employee');
     }
-    #[OA\Get(path: '/businesses/{business_id}/employees', tags: ['Employee'], summary: 'Listar empleados del negocio', security: [['sanctum' => []]], responses: [new OA\Response(response: 200, description: 'Lista de empleados con paginación'), new OA\Response(response: 403, description: 'No autorizado', content: new OA\JsonContent(ref: '#/components/schemas/Error403'))])]
+    #[OA\Get(path: '/businesses/{business_id}/employees', tags: ['Employee'], summary: 'Listar empleados del negocio', security: [['sanctum' => []]], responses: [new OA\Response(response: 200, description: 'Lista de empleados con paginación'), new OA\Response(response: 403, description: 'No autorizado', content: new OA\JsonContent(ref: '#/components/schemas/Error403', example: ['code' => 403, 'message' => 'No tiene permisos para realizar esta acción.']))])]
     public function index(EmployeeIndexRequest $request, Business $business)
     {
         $this->authorize('viewAny', [Employee::class, $business]);
@@ -59,7 +59,7 @@ class EmployeeController extends Controller
         return response()->json($payload);
     }
 
-    #[OA\Post(path: '/businesses/{business_id}/employees', tags: ['Employee'], summary: 'Crear un empleado', security: [['sanctum' => []]], responses: [new OA\Response(response: 201, description: 'Empleado creado'), new OA\Response(response: 403, description: 'No autorizado', content: new OA\JsonContent(ref: '#/components/schemas/Error403')), new OA\Response(response: 422, description: 'Validación fallida', content: new OA\JsonContent(ref: '#/components/schemas/ValidationError'))])]
+    #[OA\Post(path: '/businesses/{business_id}/employees', tags: ['Employee'], summary: 'Crear un empleado', security: [['sanctum' => []]], responses: [new OA\Response(response: 201, description: 'Empleado creado'), new OA\Response(response: 403, description: 'No autorizado', content: new OA\JsonContent(ref: '#/components/schemas/Error403', example: ['code' => 403, 'message' => 'No tiene permisos para realizar esta acción.'])), new OA\Response(response: 422, description: 'Validación fallida', content: new OA\JsonContent(ref: '#/components/schemas/ValidationError', example: ['message' => 'The given data was invalid.', 'errors' => ['name' => ['El nombre es obligatorio.'], 'email' => ['El email debe ser una dirección válida.']]]))])]
     public function store(StoreEmployeeRequest $request, Business $business)
     {
         $this->authorize('create', [Employee::class, $business]);
@@ -71,7 +71,7 @@ class EmployeeController extends Controller
         return response()->json(['data' => $employee], 201);
     }
 
-    #[OA\Get(path: '/businesses/{business_id}/employees/{employee_id}', tags: ['Employee'], summary: 'Obtener un empleado', security: [['sanctum' => []]], responses: [new OA\Response(response: 200, description: 'Detalle del empleado'), new OA\Response(response: 403, description: 'No autorizado', content: new OA\JsonContent(ref: '#/components/schemas/Error403')), new OA\Response(response: 404, description: 'No encontrado')])]
+    #[OA\Get(path: '/businesses/{business_id}/employees/{employee_id}', tags: ['Employee'], summary: 'Obtener un empleado', security: [['sanctum' => []]], responses: [new OA\Response(response: 200, description: 'Detalle del empleado'), new OA\Response(response: 403, description: 'No autorizado', content: new OA\JsonContent(ref: '#/components/schemas/Error403', example: ['code' => 403, 'message' => 'No tiene permisos para realizar esta acción.'])), new OA\Response(response: 404, description: 'No encontrado')])]
     public function show(Business $business, Employee $employee)
     {
         $this->ensureEmployeeBelongsToBusiness($business, $employee);
@@ -80,7 +80,7 @@ class EmployeeController extends Controller
         return response()->json(['data' => $employee->load('department')]);
     }
 
-    #[OA\Put(path: '/businesses/{business_id}/employees/{employee_id}', tags: ['Employee'], summary: 'Actualizar un empleado', security: [['sanctum' => []]], responses: [new OA\Response(response: 200, description: 'Empleado actualizado'), new OA\Response(response: 403, description: 'No autorizado', content: new OA\JsonContent(ref: '#/components/schemas/Error403')), new OA\Response(response: 422, description: 'Validación fallida', content: new OA\JsonContent(ref: '#/components/schemas/ValidationError'))])]
+    #[OA\Put(path: '/businesses/{business_id}/employees/{employee_id}', tags: ['Employee'], summary: 'Actualizar un empleado', security: [['sanctum' => []]], responses: [new OA\Response(response: 200, description: 'Empleado actualizado'), new OA\Response(response: 403, description: 'No autorizado', content: new OA\JsonContent(ref: '#/components/schemas/Error403', example: ['code' => 403, 'message' => 'No tiene permisos para realizar esta acción.'])), new OA\Response(response: 422, description: 'Validación fallida', content: new OA\JsonContent(ref: '#/components/schemas/ValidationError', example: ['message' => 'The given data was invalid.', 'errors' => ['name' => ['El nombre es obligatorio.'], 'email' => ['El email debe ser una dirección válida.']]]))])]
     public function update(UpdateEmployeeRequest $request, Business $business, Employee $employee)
     {
         $this->ensureEmployeeBelongsToBusiness($business, $employee);
@@ -91,7 +91,7 @@ class EmployeeController extends Controller
         return response()->json(['data' => $employee->fresh()->load('department')]);
     }
 
-    #[OA\Delete(path: '/businesses/{business_id}/employees/{employee_id}', tags: ['Employee'], summary: 'Eliminar un empleado', security: [['sanctum' => []]], responses: [new OA\Response(response: 204, description: 'Empleado eliminado'), new OA\Response(response: 403, description: 'No autorizado', content: new OA\JsonContent(ref: '#/components/schemas/Error403'))])]
+    #[OA\Delete(path: '/businesses/{business_id}/employees/{employee_id}', tags: ['Employee'], summary: 'Eliminar un empleado', security: [['sanctum' => []]], responses: [new OA\Response(response: 204, description: 'Empleado eliminado'), new OA\Response(response: 403, description: 'No autorizado', content: new OA\JsonContent(ref: '#/components/schemas/Error403', example: ['code' => 403, 'message' => 'No tiene permisos para realizar esta acción.']))])]
     public function destroy(Business $business, Employee $employee)
     {
         $this->ensureEmployeeBelongsToBusiness($business, $employee);

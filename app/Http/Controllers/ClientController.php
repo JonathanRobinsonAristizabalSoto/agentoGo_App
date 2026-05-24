@@ -15,7 +15,7 @@ class ClientController extends Controller
     {
         $this->authorizeResource(\App\Models\Client::class, 'client');
     }
-    #[OA\Get(path: '/businesses/{business_id}/clients', tags: ['Client'], summary: 'Listar clientes del negocio', security: [['sanctum' => []]], responses: [new OA\Response(response: 200, description: 'Lista de clientes con paginación'), new OA\Response(response: 403, description: 'No autorizado', content: new OA\JsonContent(ref: '#/components/schemas/Error403'))])]
+    #[OA\Get(path: '/businesses/{business_id}/clients', tags: ['Client'], summary: 'Listar clientes del negocio', security: [['sanctum' => []]], responses: [new OA\Response(response: 200, description: 'Lista de clientes con paginación'), new OA\Response(response: 403, description: 'No autorizado', content: new OA\JsonContent(ref: '#/components/schemas/Error403', example: ['code' => 403, 'message' => 'No tiene permisos para realizar esta acción.']))])]
     public function index(ClientIndexRequest $request, Business $business)
     {
         $this->authorize('viewAny', [Client::class, $business]);
@@ -58,7 +58,7 @@ class ClientController extends Controller
         return response()->json($payload);
     }
 
-    #[OA\Post(path: '/businesses/{business_id}/clients', tags: ['Client'], summary: 'Crear un cliente', security: [['sanctum' => []]], responses: [new OA\Response(response: 201, description: 'Cliente creado'), new OA\Response(response: 403, description: 'No autorizado', content: new OA\JsonContent(ref: '#/components/schemas/Error403')), new OA\Response(response: 422, description: 'Validación fallida', content: new OA\JsonContent(ref: '#/components/schemas/ValidationError'))])]
+    #[OA\Post(path: '/businesses/{business_id}/clients', tags: ['Client'], summary: 'Crear un cliente', security: [['sanctum' => []]], responses: [new OA\Response(response: 201, description: 'Cliente creado'), new OA\Response(response: 403, description: 'No autorizado', content: new OA\JsonContent(ref: '#/components/schemas/Error403', example: ['code' => 403, 'message' => 'No tiene permisos para realizar esta acción.'])), new OA\Response(response: 422, description: 'Validación fallida', content: new OA\JsonContent(ref: '#/components/schemas/ValidationError', example: ['message' => 'The given data was invalid.', 'errors' => ['name' => ['El nombre es obligatorio.'], 'email' => ['El email debe ser una dirección válida.']]]))])]
     public function store(StoreClientRequest $request, Business $business)
     {
         $this->authorize('create', [Client::class, $business]);
@@ -70,7 +70,7 @@ class ClientController extends Controller
         return response()->json(['data' => $client], 201);
     }
 
-    #[OA\Get(path: '/businesses/{business_id}/clients/{client_id}', tags: ['Client'], summary: 'Obtener un cliente', security: [['sanctum' => []]], responses: [new OA\Response(response: 200, description: 'Detalle del cliente'), new OA\Response(response: 403, description: 'No autorizado', content: new OA\JsonContent(ref: '#/components/schemas/Error403')), new OA\Response(response: 404, description: 'No encontrado')])]
+    #[OA\Get(path: '/businesses/{business_id}/clients/{client_id}', tags: ['Client'], summary: 'Obtener un cliente', security: [['sanctum' => []]], responses: [new OA\Response(response: 200, description: 'Detalle del cliente'), new OA\Response(response: 403, description: 'No autorizado', content: new OA\JsonContent(ref: '#/components/schemas/Error403', example: ['code' => 403, 'message' => 'No tiene permisos para realizar esta acción.'])), new OA\Response(response: 404, description: 'No encontrado')])]
     public function show(Business $business, Client $client)
     {
         $this->ensureClientBelongsToBusiness($business, $client);
@@ -79,7 +79,7 @@ class ClientController extends Controller
         return response()->json(['data' => $client]);
     }
 
-    #[OA\Put(path: '/businesses/{business_id}/clients/{client_id}', tags: ['Client'], summary: 'Actualizar un cliente', security: [['sanctum' => []]], responses: [new OA\Response(response: 200, description: 'Cliente actualizado'), new OA\Response(response: 403, description: 'No autorizado', content: new OA\JsonContent(ref: '#/components/schemas/Error403')), new OA\Response(response: 422, description: 'Validación fallida', content: new OA\JsonContent(ref: '#/components/schemas/ValidationError'))])]
+    #[OA\Put(path: '/businesses/{business_id}/clients/{client_id}', tags: ['Client'], summary: 'Actualizar un cliente', security: [['sanctum' => []]], responses: [new OA\Response(response: 200, description: 'Cliente actualizado'), new OA\Response(response: 403, description: 'No autorizado', content: new OA\JsonContent(ref: '#/components/schemas/Error403', example: ['code' => 403, 'message' => 'No tiene permisos para realizar esta acción.'])), new OA\Response(response: 422, description: 'Validación fallida', content: new OA\JsonContent(ref: '#/components/schemas/ValidationError', example: ['message' => 'The given data was invalid.', 'errors' => ['name' => ['El nombre es obligatorio.'], 'email' => ['El email debe ser una dirección válida.']]]))])]
     public function update(UpdateClientRequest $request, Business $business, Client $client)
     {
         $this->ensureClientBelongsToBusiness($business, $client);
@@ -90,7 +90,7 @@ class ClientController extends Controller
         return response()->json(['data' => $client->fresh()]);
     }
 
-    #[OA\Delete(path: '/businesses/{business_id}/clients/{client_id}', tags: ['Client'], summary: 'Eliminar un cliente', security: [['sanctum' => []]], responses: [new OA\Response(response: 204, description: 'Cliente eliminado'), new OA\Response(response: 403, description: 'No autorizado', content: new OA\JsonContent(ref: '#/components/schemas/Error403'))])]
+    #[OA\Delete(path: '/businesses/{business_id}/clients/{client_id}', tags: ['Client'], summary: 'Eliminar un cliente', security: [['sanctum' => []]], responses: [new OA\Response(response: 204, description: 'Cliente eliminado'), new OA\Response(response: 403, description: 'No autorizado', content: new OA\JsonContent(ref: '#/components/schemas/Error403', example: ['code' => 403, 'message' => 'No tiene permisos para realizar esta acción.']))])]
     public function destroy(Business $business, Client $client)
     {
         $this->ensureClientBelongsToBusiness($business, $client);

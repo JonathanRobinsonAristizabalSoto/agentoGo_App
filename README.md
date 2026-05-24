@@ -4,7 +4,7 @@
 
 API REST construida con Laravel 12 que proporciona autenticación con tokens (Sanctum), gestión multi-tenant de negocios, y endpoints protegidos.
 
-## Cambios Recientes (v0.2-dev)
+## Cambios Recientes (v0.3-dev)
 
 - ✅ **FormRequests centralizados**: `StoreBusinessRequest`, `UpdateBusinessRequest`, `PaginationRequest`, `BusinessIndexRequest`
 - ✅ **Listado de negocios mejorado**: búsqueda por nombre/slug y filtro por estado en GET /businesses
@@ -15,8 +15,9 @@ API REST construida con Laravel 12 que proporciona autenticación con tokens (Sa
 - ✅ **Validación**: Mensajes de error en español, reglas centralizadas
 - ✅ **Auditoría automática**: AuditLog model + trait Auditable para rastrear cambios
 - ✅ **Endpoint GET /audit-logs**: Listar logs con filtros (model_type, action, user_id) y paginación
-- ✅ **OpenAPI/Swagger**: Documentación interactiva con L5-Swagger (10 endpoints documentados)
-- ✅ **Tests**: 46 tests passing (254 assertions, 0 warnings)
+- ✅ **OpenAPI/Swagger**: Documentación interactiva con L5-Swagger (esquemas y ejemplos 403/422 añadidos)
+- ✅ **Tests**: 68 tests passing (314 assertions)
+- ✅ **Seguridad básica**: `SecurityHeaders` middleware añadido y `RateLimiter` configurado
 
 ## Inicio Rápido
 
