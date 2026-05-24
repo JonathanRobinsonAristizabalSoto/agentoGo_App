@@ -53,6 +53,13 @@ class AppServiceProvider extends ServiceProvider
             return Limit::perMinute(60)->by($key);
         });
 
+        // Rate limiter para intentos de login (protección contra fuerza bruta)
+        RateLimiter::for('login', function (Request $request) {
+            $key = $request->input('email') ?: $request->ip();
+            // Límite corto para prevenir intentos bruteforce
+            return Limit::perMinute((int) env('LOGIN_THROTTLE_PER_MIN', 5))->by($key);
+        });
+
         // Registrar middleware de cabeceras de seguridad en el grupo 'api'
         if ($this->app->has('router')) {
             $this->app['router']->pushMiddlewareToGroup('api', \App\Http\Middleware\SecurityHeaders::class);

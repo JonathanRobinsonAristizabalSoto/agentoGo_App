@@ -11,8 +11,8 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\ReservationController;
 
 // Rutas de autenticación públicas
-Route::post('/auth/register', [AuthController::class, 'register']);
-Route::post('/auth/login', [AuthController::class, 'login']);
+Route::post('/auth/register', [AuthController::class, 'register'])->middleware('throttle:login');
+Route::post('/auth/login', [AuthController::class, 'login'])->middleware('throttle:login');
 
 // Rutas protegidas con autenticación Sanctum
 Route::middleware('auth:sanctum')->group(function () {
