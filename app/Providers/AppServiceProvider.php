@@ -4,6 +4,9 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
 use App\Models\Business;
 use App\Models\Employee;
 use App\Models\Client;
@@ -43,5 +46,11 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Employee::class, EmployeePolicy::class);
         Gate::policy(Client::class, ClientPolicy::class);
         Gate::policy(Reservation::class, ReservationPolicy::class);
+
+        // Rate limiter por negocio: si hay header X-Business-Id lo usa, si no usa user id o ip
+        RateLimiter::for('business', function (Request $request) {
+            $key = $request->header('X-Business-Id') ?: ($request->user()?->id ?: $request->ip());
+            return Limit::perMinute(60)->by($key);
+        });
     }
 }

@@ -25,7 +25,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/businesses', [BusinessController::class, 'index']);
 
     // Rutas que requieren un business existente (tenant)
-    Route::middleware(\App\Http\Middleware\EnsureTenant::class)->group(function () {
+    Route::middleware([\App\Http\Middleware\EnsureTenant::class, 'throttle:business'])->group(function () {
         Route::get('/businesses/{business}', [BusinessController::class, 'show']);
         Route::put('/businesses/{business}', [BusinessController::class, 'update']);
         Route::delete('/businesses/{business}', [BusinessController::class, 'destroy']);

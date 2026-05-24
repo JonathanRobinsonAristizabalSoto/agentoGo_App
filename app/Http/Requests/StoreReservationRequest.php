@@ -35,7 +35,12 @@ class StoreReservationRequest extends FormRequest
             'scheduled_at' => ['required', 'date'],
             'ends_at' => ['nullable', 'date', 'after_or_equal:scheduled_at'],
             'status' => ['nullable', 'string', Rule::in(['scheduled', 'confirmed', 'completed', 'cancelled'])],
-            'notes' => ['nullable', 'string'],
+            'notes' => ['nullable', 'string', 'max:2000'],
         ];
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $this->merge(array_map(fn($v) => is_string($v) ? trim(strip_tags($v)) : $v, $this->only(['notes', 'status'])));
     }
 }

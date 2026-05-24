@@ -37,7 +37,12 @@ class UpdateReservationRequest extends FormRequest
             'scheduled_at' => ['sometimes', 'date'],
             'ends_at' => ['sometimes', 'nullable', 'date', 'after_or_equal:scheduled_at'],
             'status' => ['sometimes', 'string', Rule::in(['scheduled', 'confirmed', 'completed', 'cancelled'])],
-            'notes' => ['sometimes', 'nullable', 'string'],
+            'notes' => ['sometimes', 'nullable', 'string', 'max:2000'],
         ];
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $this->merge(array_map(fn($v) => is_string($v) ? trim(strip_tags($v)) : $v, $this->only(['notes', 'status'])));
     }
 }

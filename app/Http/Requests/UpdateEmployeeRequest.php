@@ -31,4 +31,9 @@ class UpdateEmployeeRequest extends FormRequest
             'status' => ['sometimes', 'string', Rule::in(['active', 'inactive'])],
         ];
     }
+
+    protected function prepareForValidation(): void
+    {
+        $this->merge(array_map(fn($v) => is_string($v) ? trim(strip_tags($v)) : $v, $this->only(['name', 'email', 'phone', 'position', 'status'])));
+    }
 }

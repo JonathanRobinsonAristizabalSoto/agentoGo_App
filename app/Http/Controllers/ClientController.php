@@ -15,36 +15,43 @@ class ClientController extends Controller
     public function index(ClientIndexRequest $request, Business $business)
     {
         $this->authorize('viewAny', [Client::class, $business]);
-        $query = $business->clients();
 
-        if ($search = $request->getSearch()) {
-            $query->where(function ($nestedQuery) use ($search) {
-                $nestedQuery->where('name', 'like', '%' . $search . '%')
-                    ->orWhere('email', 'like', '%' . $search . '%')
-                    ->orWhere('phone', 'like', '%' . $search . '%')
-                    ->orWhere('notes', 'like', '%' . $search . '%');
-            });
-        }
+        $cacheKey = sprintf('business:%s:clients:page=%s:per=%s:search=%s:status=%s', $business->id, $request->getPage(), $request->getPerPage(), $request->getSearch() ?? 'none', $request->getStatus() ?? 'any');
 
-        if ($status = $request->getStatus()) {
-            $query->where('status', $status);
-        }
+        $payload = \Illuminate\Support\Facades\Cache::remember($cacheKey, 60, function () use ($business, $request) {
+            $query = $business->clients();
 
-        $clients = $query->orderBy('id', 'desc')
-            ->paginate($request->getPerPage(), ['*'], 'page', $request->getPage());
+            if ($search = $request->getSearch()) {
+                $query->where(function ($nestedQuery) use ($search) {
+                    $nestedQuery->where('name', 'like', '%' . $search . '%')
+                        ->orWhere('email', 'like', '%' . $search . '%')
+                        ->orWhere('phone', 'like', '%' . $search . '%')
+                        ->orWhere('notes', 'like', '%' . $search . '%');
+                });
+            }
 
-        return response()->json([
-            'data' => $clients->items(),
-            'pagination' => [
-                'total' => $clients->total(),
-                'per_page' => $clients->perPage(),
-                'current_page' => $clients->currentPage(),
-                'last_page' => $clients->lastPage(),
-                'from' => $clients->firstItem(),
-                'to' => $clients->lastItem(),
-                'has_more_pages' => $clients->hasMorePages(),
-            ],
-        ]);
+            if ($status = $request->getStatus()) {
+                $query->where('status', $status);
+            }
+
+            $clients = $query->orderBy('id', 'desc')
+                ->paginate($request->getPerPage(), ['*'], 'page', $request->getPage());
+
+            return [
+                'data' => $clients->items(),
+                'pagination' => [
+                    'total' => $clients->total(),
+                    'per_page' => $clients->perPage(),
+                    'current_page' => $clients->currentPage(),
+                    'last_page' => $clients->lastPage(),
+                    'from' => $clients->firstItem(),
+                    'to' => $clients->lastItem(),
+                    'has_more_pages' => $clients->hasMorePages(),
+                ],
+            ];
+        });
+
+        return response()->json($payload);
     }
 
     #[OA\Post(path: '/businesses/{business_id}/clients', tags: ['Client'], summary: 'Crear un cliente', security: [['sanctum' => []]], responses: [new OA\Response(response: 201, description: 'Cliente creado'), new OA\Response(response: 403, description: 'No autorizado', content: new OA\JsonContent(ref: '#/components/schemas/Error403')), new OA\Response(response: 422, description: 'Validación fallida', content: new OA\JsonContent(ref: '#/components/schemas/ValidationError'))])]

@@ -15,42 +15,49 @@ class ReservationController extends Controller
     public function index(ReservationIndexRequest $request, Business $business)
     {
         $this->authorize('viewAny', [Reservation::class, $business]);
-        $query = $business->reservations()->with(['department', 'employee', 'client', 'creator']);
 
-        if ($search = $request->getSearch()) {
-            $query->where(function ($nestedQuery) use ($search) {
-                $nestedQuery->where('notes', 'like', '%' . $search . '%')
-                    ->orWhereHas('client', function ($clientQuery) use ($search) {
-                        $clientQuery->where('name', 'like', '%' . $search . '%');
-                    })
-                    ->orWhereHas('employee', function ($employeeQuery) use ($search) {
-                        $employeeQuery->where('name', 'like', '%' . $search . '%');
-                    })
-                    ->orWhereHas('department', function ($departmentQuery) use ($search) {
-                        $departmentQuery->where('name', 'like', '%' . $search . '%');
-                    });
-            });
-        }
+        $cacheKey = sprintf('business:%s:reservations:page=%s:per=%s:search=%s:status=%s', $business->id, $request->getPage(), $request->getPerPage(), $request->getSearch() ?? 'none', $request->getStatus() ?? 'any');
 
-        if ($status = $request->getStatus()) {
-            $query->where('status', $status);
-        }
+        $payload = \Illuminate\Support\Facades\Cache::remember($cacheKey, 60, function () use ($business, $request) {
+            $query = $business->reservations()->with(['department', 'employee', 'client', 'creator']);
 
-        $reservations = $query->orderBy('id', 'desc')
-            ->paginate($request->getPerPage(), ['*'], 'page', $request->getPage());
+            if ($search = $request->getSearch()) {
+                $query->where(function ($nestedQuery) use ($search) {
+                    $nestedQuery->where('notes', 'like', '%' . $search . '%')
+                        ->orWhereHas('client', function ($clientQuery) use ($search) {
+                            $clientQuery->where('name', 'like', '%' . $search . '%');
+                        })
+                        ->orWhereHas('employee', function ($employeeQuery) use ($search) {
+                            $employeeQuery->where('name', 'like', '%' . $search . '%');
+                        })
+                        ->orWhereHas('department', function ($departmentQuery) use ($search) {
+                            $departmentQuery->where('name', 'like', '%' . $search . '%');
+                        });
+                });
+            }
 
-        return response()->json([
-            'data' => $reservations->items(),
-            'pagination' => [
-                'total' => $reservations->total(),
-                'per_page' => $reservations->perPage(),
-                'current_page' => $reservations->currentPage(),
-                'last_page' => $reservations->lastPage(),
-                'from' => $reservations->firstItem(),
-                'to' => $reservations->lastItem(),
-                'has_more_pages' => $reservations->hasMorePages(),
-            ],
-        ]);
+            if ($status = $request->getStatus()) {
+                $query->where('status', $status);
+            }
+
+            $reservations = $query->orderBy('id', 'desc')
+                ->paginate($request->getPerPage(), ['*'], 'page', $request->getPage());
+
+            return [
+                'data' => $reservations->items(),
+                'pagination' => [
+                    'total' => $reservations->total(),
+                    'per_page' => $reservations->perPage(),
+                    'current_page' => $reservations->currentPage(),
+                    'last_page' => $reservations->lastPage(),
+                    'from' => $reservations->firstItem(),
+                    'to' => $reservations->lastItem(),
+                    'has_more_pages' => $reservations->hasMorePages(),
+                ],
+            ];
+        });
+
+        return response()->json($payload);
     }
 
     #[OA\Post(path: '/businesses/{business_id}/reservations', tags: ['Reservation'], summary: 'Crear una reserva', security: [['sanctum' => []]], responses: [new OA\Response(response: 201, description: 'Reserva creada'), new OA\Response(response: 403, description: 'No autorizado', content: new OA\JsonContent(ref: '#/components/schemas/Error403')), new OA\Response(response: 422, description: 'Validación fallida', content: new OA\JsonContent(ref: '#/components/schemas/ValidationError'))])]

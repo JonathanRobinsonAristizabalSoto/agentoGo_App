@@ -18,8 +18,13 @@ class StoreClientRequest extends FormRequest
             'name' => ['required', 'string', 'max:190'],
             'email' => ['nullable', 'email', 'max:190'],
             'phone' => ['nullable', 'string', 'max:64'],
-            'notes' => ['nullable', 'string'],
+            'notes' => ['nullable', 'string', 'max:2000'],
             'status' => ['nullable', 'string', Rule::in(['active', 'inactive'])],
         ];
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $this->merge(array_map(fn($v) => is_string($v) ? trim(strip_tags($v)) : $v, $this->only(['name', 'email', 'phone', 'notes', 'status'])));
     }
 }

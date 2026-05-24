@@ -16,36 +16,43 @@ class EmployeeController extends Controller
     public function index(EmployeeIndexRequest $request, Business $business)
     {
         $this->authorize('viewAny', [Employee::class, $business]);
-        $query = $business->employees()->with('department');
 
-        if ($search = $request->getSearch()) {
-            $query->where(function ($nestedQuery) use ($search) {
-                $nestedQuery->where('name', 'like', '%' . $search . '%')
-                    ->orWhere('email', 'like', '%' . $search . '%')
-                    ->orWhere('phone', 'like', '%' . $search . '%')
-                    ->orWhere('position', 'like', '%' . $search . '%');
-            });
-        }
+        $cacheKey = sprintf('business:%s:employees:page=%s:per=%s:search=%s:status=%s', $business->id, $request->getPage(), $request->getPerPage(), $request->getSearch() ?? 'none', $request->getStatus() ?? 'any');
 
-        if ($status = $request->getStatus()) {
-            $query->where('status', $status);
-        }
+        $payload = \Illuminate\Support\Facades\Cache::remember($cacheKey, 60, function () use ($business, $request) {
+            $query = $business->employees()->with('department');
 
-        $employees = $query->orderBy('id', 'desc')
-            ->paginate($request->getPerPage(), ['*'], 'page', $request->getPage());
+            if ($search = $request->getSearch()) {
+                $query->where(function ($nestedQuery) use ($search) {
+                    $nestedQuery->where('name', 'like', '%' . $search . '%')
+                        ->orWhere('email', 'like', '%' . $search . '%')
+                        ->orWhere('phone', 'like', '%' . $search . '%')
+                        ->orWhere('position', 'like', '%' . $search . '%');
+                });
+            }
 
-        return response()->json([
-            'data' => $employees->items(),
-            'pagination' => [
-                'total' => $employees->total(),
-                'per_page' => $employees->perPage(),
-                'current_page' => $employees->currentPage(),
-                'last_page' => $employees->lastPage(),
-                'from' => $employees->firstItem(),
-                'to' => $employees->lastItem(),
-                'has_more_pages' => $employees->hasMorePages(),
-            ],
-        ]);
+            if ($status = $request->getStatus()) {
+                $query->where('status', $status);
+            }
+
+            $employees = $query->orderBy('id', 'desc')
+                ->paginate($request->getPerPage(), ['*'], 'page', $request->getPage());
+
+            return [
+                'data' => $employees->items(),
+                'pagination' => [
+                    'total' => $employees->total(),
+                    'per_page' => $employees->perPage(),
+                    'current_page' => $employees->currentPage(),
+                    'last_page' => $employees->lastPage(),
+                    'from' => $employees->firstItem(),
+                    'to' => $employees->lastItem(),
+                    'has_more_pages' => $employees->hasMorePages(),
+                ],
+            ];
+        });
+
+        return response()->json($payload);
     }
 
     #[OA\Post(path: '/businesses/{business_id}/employees', tags: ['Employee'], summary: 'Crear un empleado', security: [['sanctum' => []]], responses: [new OA\Response(response: 201, description: 'Empleado creado'), new OA\Response(response: 403, description: 'No autorizado', content: new OA\JsonContent(ref: '#/components/schemas/Error403')), new OA\Response(response: 422, description: 'Validación fallida', content: new OA\JsonContent(ref: '#/components/schemas/ValidationError'))])]
