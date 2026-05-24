@@ -1,0 +1,24 @@
+# Ignorar .git local dentro de apps/api para evitar nested repo
+apps/api/.git
+
+# Node / PHP / OS defaults
+node_modules/
+vendor/
+.env
+.env.local
+.env.*.local
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Build artifacts
+dist/
+build/
+
+# Logs
+logs/
+*.log
+
+# API docs output
+storage/api-docs/
