@@ -79,6 +79,44 @@ Ver [API_DOCUMENTATION.md](./API_DOCUMENTATION.md) para:
 
 ## Próximos Pasos (Recomendado)
 
+## Monitoreo y Logging
+
+Se integró Sentry para captura de errores y un canal de logs en formato JSON.
+
+Pasos para configurar localmente:
+
+1. Añadir `SENTRY_DSN` a tu `.env` (o configurar como secret en producción):
+
+```env
+SENTRY_DSN=https://<public_key>@sentry.io/<project_id>
+```
+
+2. Verificar que `LOG_STACK` en `.env` o `.env.example` incluya `json` y `sentry`:
+
+```env
+LOG_STACK=single,json,sentry
+```
+
+3. Probar envío a Sentry desde Tinker:
+
+```powershell
+cd apps/api
+php artisan tinker
+>>> app('sentry')->captureMessage('Prueba Sentry desde entorno local');
+```
+
+4. Revisar logs JSON locales:
+
+```powershell
+tail -n 200 storage/logs/laravel-json.log
+```
+
+Notas:
+- El archivo `config/sentry.php` fue publicado y `app/Exceptions/Handler.php` captura excepciones y las envía a Sentry cuando está configurado.
+- Asegúrate de definir `SENTRY_DSN` en entornos de staging/producción como secret.
+
+Si quieres, puedo continuar ahora con tests de integración/E2E.
+
 1. **Relacionamientos:** Departamentos, empleados, clientes por negocio
 2. **Webhooks:** Notificaciones de cambios en tiempo real
 3. **Rate limiting:** Protección contra abuso
